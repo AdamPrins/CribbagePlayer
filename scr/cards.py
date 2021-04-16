@@ -1,5 +1,6 @@
 import random
 import itertools
+from termcolor import colored
 
 class Card:
     def __init__(self, suit, rank):
@@ -9,7 +10,6 @@ class Card:
 
 
     def __str__(self):
-        #return Card.rankName(self.rank) + " of " + self.suit
         return Card.rankName(self.rank) + self.suit
 
 
@@ -22,6 +22,14 @@ class Card:
             return self.rank<card.rank
         else:
             return Card.suits().index(self.suit) > Card.suits().index(card.suit)
+
+
+    def coloredString(self):
+        if self.suit == "♥" or self.suit == "♦":
+            color = 'red'
+        else:
+            color = 'grey'
+        return colored(str(self), color, 'on_white')
 
 
     def rankName(rank):
@@ -40,7 +48,6 @@ class Card:
 
 
     def suits():
-        #return ["Spades", "Hearts", "Diamonds", "Clubs"]
         return ["♠", "♥", "♦", "♣"]
 
 
@@ -50,6 +57,10 @@ class Card:
 
 class Deck:
     def __init__(self, cards=None):
+        """
+        returns a deck containing the passed cards
+        if None are passed, a brand new deck is created
+        """
         self.cards = []
         if cards == None:
             for suit in Card.suits():
@@ -83,6 +94,10 @@ class Deck:
 
 
     def run(self):
+        """
+        determins if the deck contains a run
+        The whole deck must be one run with no interuptions
+        """
         for pos in range(len(self)):
             if self.cards[pos].rank != self.cards[0].rank + pos:
                 return False
@@ -90,6 +105,9 @@ class Deck:
 
 
     def suits(self):
+        """
+        Returns all the suits found in the deck
+        """
         suits = []
         for card in self.cards:
             if card.suit not in suits:
@@ -98,6 +116,10 @@ class Deck:
 
 
     def combinations(self, size=None, end=None):
+        """
+        Returns all the possible combinations of subDecks
+        A hand of 4 cards has 4 subdecks with 1 card, 6 with 2, 4 with 3, 1 with 4
+        """
         if isinstance(size, int) and isinstance(end, int):
             range_ = range(size,end+1)
         elif isinstance(size, int):
@@ -138,9 +160,8 @@ class Deck:
         return string
 
 
-if __name__ == "__main__":
-    deck = Deck()
-    deck.shuffle()
-
-    hand = deck.draw(5)
-    print(len(hand.combinations(1)))
+    def coloredString(self):
+        string = colored("")
+        for card in self.cards:
+            string += card.coloredString()
+        return string
